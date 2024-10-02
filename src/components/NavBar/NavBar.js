@@ -15,7 +15,7 @@ export default class NavBar extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
     this.setState({ activeLink: window.location.pathname });
   }
 
