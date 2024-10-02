@@ -40,6 +40,7 @@ export default class NavBar extends Component {
       { path: "/tech", label: "Tech" },
       { path: "/clothes", label: "Clothes" },
     ];
+    console.log("activeLink:", activeLink);
 
     return (
       <div className="fixed top-0 start-0 end-0 shadow z-20 bg-white">
