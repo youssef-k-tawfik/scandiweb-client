@@ -1,0 +1,6 @@
+.sub-heading{
+    @apply font-robotoCondensed mb-1 text-nowrap;
+}
+.selected-attribute{
+    @apply bg-black text-white;
+}
