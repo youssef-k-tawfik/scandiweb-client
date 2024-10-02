@@ -11,7 +11,7 @@ export default class NavBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeLink: "/all",
+      activeLink: "",
     };
   }
 
@@ -27,7 +27,7 @@ export default class NavBar extends Component {
   render() {
     const { activeLink } = this.state;
 
-    // const { cart, userCurrency } = this.context;
+    // const { userCurrency } = this.context;
     const { cart, showCart, toggleShowCart } = this.context;
 
     const totalQuantity = cart.items.reduce(
@@ -52,7 +52,7 @@ export default class NavBar extends Component {
                     to={link.path}
                     className="p-4 font-semibold"
                     data-test={
-                      `/${activeLink.split("/").at(-1)}` === link.path
+                      activeLink === link.path
                         ? "active-category-link"
                         : "category-link"
                     }
