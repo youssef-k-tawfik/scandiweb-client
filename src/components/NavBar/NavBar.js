@@ -15,8 +15,11 @@ export default class NavBar extends Component {
     };
   }
 
-  componentDidUpdate() {
-    this.setState({ activeLink: window.location.pathname });
+  componentDidMount() {
+    const { pathname } = window.location;
+    this.setState({
+      activeLink: pathname === "/" ? "/all" : pathname,
+    });
   }
 
   // handleCurrencyChange = (e) => {
