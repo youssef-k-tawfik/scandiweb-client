@@ -55,7 +55,7 @@ export default class NavBar extends Component {
                   <NavLink
                     to={link.path}
                     className="p-4 font-semibold"
-                    data-test={
+                    data-testid={
                       activeLink === link.path
                         ? "active-category-link"
                         : "category-link"
