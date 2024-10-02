@@ -11,7 +11,7 @@ export default class ProductItem extends Component {
       <Link to={`/product/${product.id}`} className="no-underline">
         <div
           className="group  p-4 hover:scale-105 hover:drop-shadow-2xl bg-white duration-300"
-          data-testid={`product-${product.id}`}
+          data-testid={`product-${product.name.toLowerCase()}`}
         >
           <div className="inner text-lg overflow-hidden">
             {/* image  */}

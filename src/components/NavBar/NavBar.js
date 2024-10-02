@@ -88,7 +88,8 @@ export default class NavBar extends Component {
               <button
                 // onClick={() => this.setState({ showCart: !showCart })}
                 onClick={toggleShowCart}
-                data-testid="cart-btn"
+                // data-testid="cart-btn"
+                data-testid="cart-overlay"
               >
                 <BsCart className="text-2xl mx-2 cursor-pointer" />
               </button>
