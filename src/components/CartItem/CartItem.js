@@ -20,7 +20,7 @@ export default class CartItem extends Component {
     // * as per the requirements
     return;
     // const { item } = this.state;
-    // const { cart, updateCartWithNewItem } = this.context;
+    // const { items, updateCartWithNewItem } = this.context;
 
     // const currentSelectedAttributes = item.selectedAttributes;
     // const newSelectedAttributes = {
@@ -29,7 +29,7 @@ export default class CartItem extends Component {
     // };
 
     // // *check if same item exists
-    // const existingItemIndex = cart.items.findIndex(
+    // const existingItemIndex = items.findIndex(
     //   (cartItem) =>
     //     cartItem.id === item.id &&
     //     Object.keys(cartItem.selectedAttributes).every(

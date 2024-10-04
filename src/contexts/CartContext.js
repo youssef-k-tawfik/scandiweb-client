@@ -1,4 +1,5 @@
 // import axios from "axios";
+import axios from "axios";
 import { Component, createContext } from "react";
 import toast from "react-hot-toast";
 
@@ -7,52 +8,25 @@ export const CartContext = createContext();
 export default class CartProvider extends Component {
   constructor(props) {
     super(props);
-    this.addItem = this.addItem.bind(this);
-    // this.changeUserCurrency = this.changeUserCurrency.bind(this);
-    this.handleIncrementQuantity = this.handleIncrementQuantity.bind(this);
-    this.handleDecrementQuantity = this.handleDecrementQuantity.bind(this);
-    this.updateCartWithNewItem = this.updateCartWithNewItem.bind(this);
-    // this.updateCartWithNewItem = this.updateCartWithNewItem.bind(this);
     this.state = {
-      // labels: {
-      //   $: "USD",
-      //   "€": "EUR",
-      //   "£": "GBP",
-      //   "AED ": "AED",
-      //   "EGP ": "EGP",
-      // },
-      // userCurrency: localStorage.getItem("userCurrency") || "$",
-      userCurrency: "$",
-      // exchangeRates: {},
-      cart: {
-        // totalPrice: 0,
-        items: JSON.parse(localStorage.getItem("cartItems") || "[]"),
-      },
+      // userCurrency: localStorage.getItem("userCurrency") || "USD",
+      items: JSON.parse(localStorage.getItem("cartItems") || "[]"),
       showCart: false,
-      toggleShowCart: () => {
-        this.setState((prevState) => ({
-          showCart: !prevState.showCart,
-        }));
-      },
-      // changeUserCurrency: this.changeUserCurrency,
-      addItem: this.addItem,
-      // removeItem: this.removeItem,
-      handleIncrementQuantity: this.handleIncrementQuantity,
-      handleDecrementQuantity: this.handleDecrementQuantity,
-      updateCartWithNewItem: this.updateCartWithNewItem,
-      // updateCartWithNewItem: this.updateCartWithNewItem,
+      placeOrderLoading: false,
     };
   }
 
-  componentDidUpdate() {
-    localStorage.setItem("cartItems", JSON.stringify(this.state.cart.items));
+  componentDidUpdate(_, prevState) {
+    if (prevState.items !== this.state.items) {
+      localStorage.setItem("cartItems", JSON.stringify(this.state.items));
+    }
   }
 
   // changeUserCurrency = (currency) => {
   //   localStorage.setItem("userCurrency", currency);
   //   this.setState({
   //     userCurrency: currency,
-  //     items: this.state.cart.items.map((item) => {
+  //     items: this.state.items.map((item) => {
   //       //* update new prices
 
   //       const currentExchangeRate = this.state.exchangeRates[item.currency];
@@ -92,6 +66,8 @@ export default class CartProvider extends Component {
   //     .catch((error) => console.error(error));
   // };
 
+  toggleShowCart = () => this.setState({ showCart: !this.state.showCart });
+
   addItem = (product, selectedAttributes) => {
     // * Check if selected attributes are provided
     // * If not, set the first value of each attribute as default (as per the requirements)
@@ -103,40 +79,29 @@ export default class CartProvider extends Component {
     }
 
     // * Check if the item is already in the cart
-    const existingItemIndex = this.state.cart.items.findIndex((item) => {
+    const existingItemIndex = this.state.items.findIndex((item) => {
       return (
         item.id === product.id &&
-        JSON.stringify(item.selectedAttributes) ===
-          JSON.stringify(selectedAttributes)
+        Object.keys(selectedAttributes).every(
+          (key) => item.selectedAttributes[key] === selectedAttributes[key]
+        )
       );
     });
 
     if (existingItemIndex !== -1) {
       // * update quantity
-      const updatedItems = [...this.state.cart.items];
+      const updatedItems = [...this.state.items];
 
       updatedItems[existingItemIndex].quantity += 1;
 
-      this.setState((prevState) => ({
-        cart: {
-          ...prevState.cart,
-          items: updatedItems,
-        },
-      }));
+      this.setState({ items: updatedItems });
     } else {
       //* get the price as per the user's selection
-      // const price = product.prices.find(
-      //   (price) => price.currency.symbol === this.state.userCurrency
-      // );
-
-      // const exchangeRate =
-      //   this.state.exchangeRates[this.state.labels[this.state.userCurrency]];
 
       // * create new item
       const newItem = {
         id: product.id,
         name: product.name,
-        currency: this.state.userCurrency,
         price: product.prices[0].amount,
         attributes: product.attributes,
         quantity: 1,
@@ -146,10 +111,7 @@ export default class CartProvider extends Component {
 
       // * add to cart
       this.setState((prevState) => ({
-        cart: {
-          ...prevState.cart,
-          items: [...prevState.cart.items, newItem],
-        },
+        items: [...prevState.items, newItem],
       }));
     }
 
@@ -158,7 +120,7 @@ export default class CartProvider extends Component {
   };
 
   handleIncrementQuantity = (itemId, selectedAttributes) => {
-    const updatedItem = this.state.cart.items.find(
+    const updatedItem = this.state.items.find(
       (item) =>
         item.id === itemId && item.selectedAttributes === selectedAttributes
     );
@@ -172,22 +134,19 @@ export default class CartProvider extends Component {
     updatedItem.quantity += 1;
 
     this.setState((prevState) => ({
-      cart: {
-        ...prevState.cart,
-        items: prevState.cart.items.map((item) =>
-          item.id === itemId &&
-          Object.keys(selectedAttributes).every(
-            (key) => item.selectedAttributes[key] === selectedAttributes[key]
-          )
-            ? updatedItem
-            : item
-        ),
-      },
+      items: prevState.items.map((item) =>
+        item.id === itemId &&
+        Object.keys(selectedAttributes).every(
+          (key) => item.selectedAttributes[key] === selectedAttributes[key]
+        )
+          ? updatedItem
+          : item
+      ),
     }));
   };
 
   handleDecrementQuantity = (itemId, selectedAttributes) => {
-    const updatedItem = this.state.cart.items.find(
+    const updatedItem = this.state.items.find(
       (item) =>
         item.id === itemId &&
         Object.keys(selectedAttributes).every(
@@ -203,7 +162,7 @@ export default class CartProvider extends Component {
 
     if (updatedItem.quantity === 1) {
       // * remove item from the cart
-      const updatedItems = this.state.cart.items.filter(
+      const updatedItems = this.state.items.filter(
         (item) =>
           !(
             item.id === itemId &&
@@ -213,53 +172,101 @@ export default class CartProvider extends Component {
           )
       );
 
-      this.setState((prevState) => ({
-        cart: {
-          ...prevState.cart,
-          items: updatedItems,
-          // items: [...updatedItems],
-        },
-      }));
+      this.setState({ items: updatedItems });
     } else {
       updatedItem.quantity -= 1;
 
       this.setState((prevState) => ({
-        cart: {
-          ...prevState.cart,
-          items: prevState.cart.items.map((item) =>
-            item.id === itemId &&
-            Object.keys(selectedAttributes).every(
-              (key) => item.selectedAttributes[key] === selectedAttributes[key]
-            )
-              ? // { ...updatedItem }
-                updatedItem
-              : item
-          ),
-        },
+        items: prevState.items.map((item) =>
+          item.id === itemId &&
+          Object.keys(selectedAttributes).every(
+            (key) => item.selectedAttributes[key] === selectedAttributes[key]
+          )
+            ? updatedItem
+            : item
+        ),
       }));
     }
   };
 
-  updateCartWithNewItem = (newItem, currentSelectedAttributes) => {
-    this.setState((prevState) => ({
-      cart: {
-        ...prevState.cart,
-        items: this.state.cart.items.map((item) =>
-          item.id === newItem.id &&
-          Object.keys(currentSelectedAttributes).every(
-            (key) =>
-              item.selectedAttributes[key] === currentSelectedAttributes[key]
-          )
-            ? newItem
-            : item
-        ),
-      },
-    }));
+  placeOrder = () => {
+    this.setState({ placeOrderLoading: true });
+    console.log("Placing order...");
+
+    const query = `
+      mutation PlaceOrder($orderItems: [OrderItemInput!]!) {
+        placeOrder(orderItems: $orderItems) {
+          order_number
+        }
+      }
+    `;
+
+    const variables = {
+      orderItems: this.state.items.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        selectedAttributes: Object.keys(item.selectedAttributes).map((key) => ({
+          id: key,
+          value: item.selectedAttributes[key],
+        })),
+      })),
+    };
+
+    // * send order to the server
+    axios
+      .post(
+        // "http://localhost:8000/graphql",
+        "https://www.yousseftawfik.com/graphql",
+        { query, variables }
+      )
+      .then((response) => {
+        console.log("response: ", response);
+
+        const orderNumber = response.data.data.placeOrder.order_number;
+        if (orderNumber === "0") {
+          toast.error("Order wasn't placed successfully!");
+        } else {
+          toast.success(
+            `Order placed successfully! Order number: ${orderNumber}`
+          );
+          this.setState({ items: [], showCart: false });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      }).finally(() => {
+        this.setState({ placeOrderLoading: false });
+      });
   };
+
+  // updateCartWithNewItem = (newItem, currentSelectedAttributes) => {
+  //   this.setState({
+  //     items: this.state.items.map((item) =>
+  //       item.id === newItem.id &&
+  //       Object.keys(currentSelectedAttributes).every(
+  //         (key) =>
+  //           item.selectedAttributes[key] === currentSelectedAttributes[key]
+  //       )
+  //         ? newItem
+  //         : item
+  //     ),
+  //   });
+  // };
 
   render() {
     return (
-      <CartContext.Provider value={this.state}>
+      <CartContext.Provider
+        value={{
+          ...this.state,
+          toggleShowCart: this.toggleShowCart,
+          addItem: this.addItem,
+          handleIncrementQuantity: this.handleIncrementQuantity,
+          handleDecrementQuantity: this.handleDecrementQuantity,
+          placeOrder: this.placeOrder,
+          // updateCartWithNewItem: this.updateCartWithNewItem,
+        }}
+      >
         {this.props.children}
       </CartContext.Provider>
     );

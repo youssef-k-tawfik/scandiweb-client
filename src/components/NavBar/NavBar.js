@@ -31,19 +31,16 @@ export default class NavBar extends Component {
     const { activeLink } = this.state;
 
     // const { userCurrency } = this.context;
-    const { cart, showCart, toggleShowCart } = this.context;
+    const { items, showCart, toggleShowCart } = this.context;
 
-    const totalQuantity = cart.items.reduce(
-      (acc, item) => acc + item.quantity,
-      0
-    );
+    const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
 
     const links = [
       { path: "/all", label: "All" },
       { path: "/tech", label: "Tech" },
       { path: "/clothes", label: "Clothes" },
     ];
-    console.log("activeLink:", activeLink);
+    // console.log("activeLink:", activeLink);
 
     return (
       <div className="fixed top-0 start-0 end-0 shadow z-20 bg-white">
@@ -88,8 +85,7 @@ export default class NavBar extends Component {
               <button
                 // onClick={() => this.setState({ showCart: !showCart })}
                 onClick={toggleShowCart}
-                // data-testid="cart-btn"
-                data-testid="cart-overlay"
+                data-testid="cart-btn"
               >
                 <BsCart className="text-2xl mx-2 cursor-pointer" />
               </button>
@@ -100,7 +96,10 @@ export default class NavBar extends Component {
               )}
             </div>
             {showCart && (
-              <div className="bg-white absolute top-full end-0 z-10 p-4">
+              <div
+                className="bg-white absolute top-full end-0 z-10 p-4"
+                data-testid="cart-overlay"
+              >
                 <Cart />
               </div>
             )}
@@ -109,7 +108,6 @@ export default class NavBar extends Component {
         {showCart && (
           <div
             className="fixed bottom-0 start-0 end-0 top-14 bg-gray-800 bg-opacity-50"
-            // onClick={() => this.setState({ showCart: !showCart })}
             onClick={toggleShowCart}
           />
         )}

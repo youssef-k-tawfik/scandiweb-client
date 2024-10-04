@@ -8,7 +8,7 @@ export default class Layout extends Component {
     return (
       <div className="container  text-mainFontColor font-raleway  px-4">
         <NavBar />
-        <main className="py-24">
+        <main className="py-20">
           <Outlet />
         </main>
         {/* <footer className="text-center bg-zinc-400 p-10 text-white">

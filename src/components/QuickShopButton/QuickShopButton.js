@@ -7,7 +7,7 @@ export default class QuickShopButton extends Component {
   static contextType = CartContext;
 
   render() {
-    const { addItem } = this.context;
+    const { addItem, toggleShowCart } = this.context;
 
     const { product } = this.props;
 
@@ -18,6 +18,7 @@ export default class QuickShopButton extends Component {
           onClick={(e) => {
             e.preventDefault();
             addItem(product);
+            toggleShowCart();
           }}
         >
           <TbShoppingCartPlus className="text-white" />
