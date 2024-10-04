@@ -26,13 +26,13 @@ export default class Attributes extends Component {
             </h3>
             <div
               className="flex gap-2 flex-nowrap"
-              data-testid={`cart-item-attribute-${attributeSet.id
+              data-testid={`product-attribute-${attributeSet.id
                 .split(" ")
                 .join("-")
                 .toLowerCase()}`}
             >
               {attributeSet.items.map((item) =>
-                // Render color attribute as a colored box
+                // * Render color attribute as a colored box
                 attributeSet.id === "Color" ? (
                   <label
                     key={item.value}
@@ -46,6 +46,7 @@ export default class Attributes extends Component {
                       clickable ? "hover:border-green-400 cursor-pointer" : ""
                     } flex items-center justify-center`}
                     title={item.displayValue}
+                    data-testid={`product-attribute-color-${item.id}`}
                   >
                     <input
                       type="radio"
@@ -66,7 +67,7 @@ export default class Attributes extends Component {
                     ></div>
                   </label>
                 ) : (
-                  // Render other attributes as labels with radio inputs
+                  // * Render other attributes as labels with radio inputs
                   <label
                     key={item.value}
                     className={`border border-black min-w-fit min-h-fit px-1  flex items-center justify-center font-sans ${
@@ -76,6 +77,10 @@ export default class Attributes extends Component {
                         ? styles["selected-attribute"]
                         : ""
                     } ${clickable ? "cursor-pointer" : ""}`}
+                    data-testid={`product-attribute-${attributeSet.id
+                      .split(" ")
+                      .join("-")
+                      .toLowerCase()}-${item.id}`}
                   >
                     <input
                       type="radio"
