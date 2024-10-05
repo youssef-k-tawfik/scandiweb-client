@@ -1,3 +1,9 @@
+// index.js
+// This file is the entry point of the application.
+// It uses the ReactDOM library to render the root component of the application.
+// It also uses the reportWebVitals function to measure the performance of the application.
+// It imports "fontsource" library to load the fonts used in the application.
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

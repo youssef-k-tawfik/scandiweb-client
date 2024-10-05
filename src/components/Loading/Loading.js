@@ -1,3 +1,7 @@
+// Loading.js
+// This component is responsible for rendering the loading animation.
+// It is used to indicate that the application is fetching data or placing order.
+
 // import styles from "./Loading.module.css";
 import { Component } from "react";
 

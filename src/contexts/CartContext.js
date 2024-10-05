@@ -1,3 +1,10 @@
+// CartContext.js
+// This component is responsible for managing the cart items along with placing an order and controlling the cart visibility.
+// It uses the axios library to send the order to the server.
+
+// ^ Requirements Enhancement: Automatically detect the user's location to set the default currency on their first visit. (using geo-location API)
+// ^ Requirements Enhancement: Allow users to change the currency of the products. (using an API to get the exchange rates)
+
 // import axios from "axios";
 import axios from "axios";
 import { Component, createContext } from "react";
@@ -16,6 +23,7 @@ export default class CartProvider extends Component {
     };
   }
 
+  // Storing the cart items in the local storage
   componentDidUpdate(_, prevState) {
     if (prevState.items !== this.state.items) {
       localStorage.setItem("cartItems", JSON.stringify(this.state.items));
@@ -24,22 +32,7 @@ export default class CartProvider extends Component {
 
   // changeUserCurrency = (currency) => {
   //   localStorage.setItem("userCurrency", currency);
-  //   this.setState({
-  //     userCurrency: currency,
-  //     items: this.state.items.map((item) => {
-  //       //* update new prices
-
-  //       const currentExchangeRate = this.state.exchangeRates[item.currency];
-  //       const newExchangeRate =
-  //         this.state.exchangeRates[this.state.labels[currency]];
-
-  //       return {
-  //         ...item,
-  //         currency,
-  //         price: (item.price / currentExchangeRate) * newExchangeRate,
-  //       };
-  //     }),
-  //   });
+  //   this.setState({ userCurrency: currency });
   // };
 
   // componentDidMount() {
@@ -66,8 +59,17 @@ export default class CartProvider extends Component {
   //     .catch((error) => console.error(error));
   // };
 
+  /**
+   * Toggles the visibility of the cart.
+   */
   toggleShowCart = () => this.setState({ showCart: !this.state.showCart });
 
+  /**
+   * Adds an item to the cart. If the item already exists, it increments the quantity.
+   *
+   * @param {Object} product - The product to add to the cart.
+   * @param {Object} selectedAttributes - The selected attributes of the product.
+   */
   addItem = (product, selectedAttributes) => {
     // * Check if selected attributes are provided
     // * If not, set the first value of each attribute as default (as per the requirements)
@@ -119,6 +121,12 @@ export default class CartProvider extends Component {
     toast.success("Added to cart!");
   };
 
+  /**
+   * Increments the quantity of an item in the cart by one.
+   *
+   * @param {string} itemId - The ID of the item.
+   * @param {Object} selectedAttributes - The selected attributes of the item.
+   */
   handleIncrementQuantity = (itemId, selectedAttributes) => {
     const updatedItem = this.state.items.find(
       (item) =>
@@ -145,6 +153,12 @@ export default class CartProvider extends Component {
     }));
   };
 
+  /**
+   * Decrements the quantity of an item in the cart by one. If the quantity is 1, it removes the item from the cart.
+   *
+   * @param {string} itemId - The ID of the item.
+   * @param {Object} selectedAttributes - The selected attributes of the item.
+   */
   handleDecrementQuantity = (itemId, selectedAttributes) => {
     const updatedItem = this.state.items.find(
       (item) =>
@@ -189,6 +203,9 @@ export default class CartProvider extends Component {
     }
   };
 
+  /**
+   * Places an order by sending the cart items to the server.
+   */
   placeOrder = () => {
     this.setState({ placeOrderLoading: true });
     console.log("Placing order...");
@@ -214,15 +231,12 @@ export default class CartProvider extends Component {
 
     // * send order to the server
     axios
-      .post(
-        // "http://localhost:8000/graphql",
-        "https://www.yousseftawfik.com/graphql",
-        { query, variables }
-      )
+      .post("https://www.yousseftawfik.com/graphql", { query, variables })
       .then((response) => {
         console.log("response: ", response);
 
         const orderNumber = response.data.data.placeOrder.order_number;
+        // if the response is "0", then the order wasn't placed successfully
         if (orderNumber === "0") {
           toast.error("Order wasn't placed successfully!");
         } else {
@@ -235,7 +249,8 @@ export default class CartProvider extends Component {
       .catch((error) => {
         console.error(error);
         toast.error("Something went wrong. Please try again later.");
-      }).finally(() => {
+      })
+      .finally(() => {
         this.setState({ placeOrderLoading: false });
       });
   };
@@ -264,7 +279,6 @@ export default class CartProvider extends Component {
           handleIncrementQuantity: this.handleIncrementQuantity,
           handleDecrementQuantity: this.handleDecrementQuantity,
           placeOrder: this.placeOrder,
-          // updateCartWithNewItem: this.updateCartWithNewItem,
         }}
       >
         {this.props.children}

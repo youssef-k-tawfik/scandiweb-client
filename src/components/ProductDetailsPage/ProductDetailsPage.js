@@ -1,3 +1,12 @@
+// ProductDetailsPage.js
+// This component is responsible for rendering the product details page.
+// It uses the axios library to fetch the product details from the server using the id passed in the URL.
+// It uses allAttributesSelected state to determine whether to disable the "Add to Cart" button.
+// It uses the main image as a hidden placeholder to set the height of the selected image.
+
+// ^ Requirements Enhancement: Remove navigation buttons from the image gallery if there is only one image.
+// ^ Requirements Enhancement: Displaying the product with the first attribute of each set selected by default for the user to add to the cart faster.
+
 import styles from "./ProductDetailsPage.module.css";
 import axios from "axios";
 import { Component } from "react";
@@ -26,10 +35,13 @@ export default class ProductDetailsPage extends Component {
     };
   }
 
+  // Fetching the product details from the server once the component is mounted
   componentDidMount() {
     this.fetchProduct();
   }
 
+  // Update the allAttributesSelected state when the selectedAttributes state changes
+  // This is used to determine whether to disable the "Add to Cart" button
   componentDidUpdate(prevProps, prevState) {
     if (prevState.selectedAttributes !== this.state.selectedAttributes) {
       this.setState({
@@ -40,6 +52,9 @@ export default class ProductDetailsPage extends Component {
     }
   }
 
+  /**
+   * Fetches the product details from the server using the product id
+   */
   fetchProduct() {
     this.setState({ isLoading: true });
 
@@ -76,11 +91,11 @@ export default class ProductDetailsPage extends Component {
     const variables = {
       id: this.state.id,
     };
+
     console.log("querying product with id:", this.state.id);
 
     axios
       .post("https://www.yousseftawfik.com/graphql", {
-      // .post("http://localhost:8000/graphql", {
         query,
         variables,
       })
@@ -104,6 +119,13 @@ export default class ProductDetailsPage extends Component {
       });
   }
 
+  /**
+   * Stores the default values for the product's attributes.
+   *
+   * This method initializes the `selectedAttributes` object with `null` values for each attribute's ID.
+   *
+   * @param {Array} attributes - The array of attribute objects. Each attribute object should have an `id` and an `items` array.
+   */
   storeDefaultAttributesValues(attributes) {
     const selectedAttributes = {};
     attributes?.forEach((attr) => {
@@ -113,6 +135,12 @@ export default class ProductDetailsPage extends Component {
     this.setState({ selectedAttributes });
   }
 
+  /**
+   * Handles the click event for selecting an attribute.
+   *
+   * @param {string} id - The ID of the attribute.
+   * @param {string} value - The value of the attribute.
+   */
   handleAttributeClick = (id, value) => {
     this.setState((prevState) => ({
       selectedAttributes: {
@@ -122,12 +150,18 @@ export default class ProductDetailsPage extends Component {
     }));
   };
 
+  /**
+   * Advances to the next image in the gallery.
+   */
   nextImage = () => {
     this.setState((prevState) => ({
       selectedImage: (prevState.selectedImage + 1) % prevState.galleryCount,
     }));
   };
 
+  /**
+   * Goes back to the previous image in the gallery.
+   */
   prevImage = () => {
     this.setState((prevState) => ({
       selectedImage:
@@ -136,7 +170,11 @@ export default class ProductDetailsPage extends Component {
     }));
   };
 
-  // Set the height of the image container to the height of the main image
+  /**
+   * Handles the image load event to set the main image height.
+   *
+   * @param {number} mainImageHeight - The height of the main image.
+   */
   handleImageLoad = (mainImageHeight) => {
     this.setState({ mainImageHeight });
   };
@@ -214,6 +252,7 @@ export default class ProductDetailsPage extends Component {
                   this.setState({ mainImageHeight: e.target.clientHeight })
                 }
               />
+              {/* displayed image */}
               <img
                 src={gallery?.[selectedImage]}
                 alt="product"

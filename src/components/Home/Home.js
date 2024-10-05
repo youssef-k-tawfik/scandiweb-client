@@ -1,8 +1,13 @@
+// Home.js
+// This component is responsible for rendering all the products available in the store.
+// It uses the axios library to fetch the products from the server.
+// This is the main component that will be rendered when the user visits the home page.
+
 // import styles from "./Home.module.css";
 import { Component } from "react";
 import axios from "axios";
-import ProductListing from "../ProductListing/ProductListing";
 import Loading from "../Loading/Loading";
+import ProductItem from "../ProductItem/ProductItem";
 
 export default class Home extends Component {
   constructor(props) {
@@ -15,10 +20,9 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    // test backend connection
+    // test server connection
     axios
       .get("https://www.yousseftawfik.com/")
-      // .get("http://localhost:8000/")
       .then((response) => {
         console.log(response);
         console.log(response.data);
@@ -35,7 +39,6 @@ export default class Home extends Component {
     this.setState({ isLoading: true });
     axios
       .post("https://www.yousseftawfik.com/graphql", {
-      // .post("http://localhost:8000/graphql", {
         query: `
         {
           allProducts {
@@ -92,16 +95,22 @@ export default class Home extends Component {
       );
     }
 
+    if (axiosError) {
+      return (
+        <div className="text-red-500">
+          There was an error fetching the products: {axiosError.message}
+        </div>
+      );
+    }
+
     return (
       <div className="container">
         <h2 className="text-4xl mb-5">All Products</h2>
-        {axiosError ? (
-          <div className="text-red-500">
-            There was an error fetching the products: {axiosError.message}
-          </div>
-        ) : (
-          <ProductListing products={allProducts} />
-        )}
+        <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-2 ">
+          {allProducts?.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </div>
       </div>
     );
   }

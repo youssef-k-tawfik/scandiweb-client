@@ -1,3 +1,9 @@
+// CartItem.js
+// This component is responsible for rendering the cart item details, quantity and image.
+// It uses the CartContext to access the increment and decrement quantity functionality.
+
+// ^ Requirements Enhancement: Allowing users to change the selected attributes from the cart overlay.
+
 // import styles from "./CartItem.module.css";
 import { Component } from "react";
 import Attributes from "../Attributes/Attributes";

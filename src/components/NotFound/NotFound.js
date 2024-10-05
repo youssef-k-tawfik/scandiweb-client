@@ -1,3 +1,7 @@
+// NotFound.js
+// This component is responsible for rendering the 404 page.
+// It will be rendered when the user visits a page that does not exist.
+
 // import styles from "./NotFound.module.css";
 import { Component } from "react";
 

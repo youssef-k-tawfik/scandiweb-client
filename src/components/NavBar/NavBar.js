@@ -1,3 +1,10 @@
+// NavBar.js
+// This component is responsible for rendering the navigation bar of the application.
+// It uses the CartContext to access the cart items and show/hide the cart overlay functionality.
+// The component uses window.location to determine the active link and update the state accordingly.
+
+// ^ Requirements Enhancement: Adding a currency dropdown to allow users to change the currency.
+
 import { Component } from "react";
 import { BsCart } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
@@ -40,7 +47,6 @@ export default class NavBar extends Component {
       { path: "/tech", label: "Tech" },
       { path: "/clothes", label: "Clothes" },
     ];
-    // console.log("activeLink:", activeLink);
 
     return (
       <div className="fixed top-0 start-0 end-0 shadow z-20 bg-white">
@@ -83,7 +89,6 @@ export default class NavBar extends Component {
                 <option value="EGP ">EGP</option>
               </select> */}
               <button
-                // onClick={() => this.setState({ showCart: !showCart })}
                 onClick={toggleShowCart}
                 data-testid="cart-btn"
               >

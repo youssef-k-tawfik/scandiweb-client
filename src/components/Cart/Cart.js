@@ -1,3 +1,7 @@
+// Cart.js
+// This component is responsible for rendering the cart items quantity, the cart items and the cart total price.
+// It uses the CartContext to access the cart items and place order functionality.
+
 // import styles from "./Cart.module.css";
 import React, { Component } from "react";
 import { CartContext } from "../../contexts/CartContext";

@@ -1,3 +1,9 @@
+// App.js
+// This component is responsible for rendering the application.
+// It uses the react-router-dom library to create the routes of the application.
+// It also uses the CartProvider context to provide the cart states to the application.
+// It uses the react-hot-toast library to display toasts in the application.
+
 import "./App.css";
 import { Component } from "react";
 import {
@@ -22,8 +28,9 @@ export default class App extends Component {
     this.routes = createBrowserRouter([
       {
         path: "",
-        element: <Layout />,
+        element: <Layout />, // Root layout
         children: [
+          // "/" route will redirect to "/all" route by default
           { index: true, element: <Navigate to="/all" replace /> },
           { path: "/all", element: <Home /> },
           { path: "/tech", element: <Tech /> },

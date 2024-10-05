@@ -1,8 +1,12 @@
+// Clothes.js
+// This component is responsible for rendering the clothes products.
+// It uses the axios library to fetch the clothes products from the server.
+
 // import styles from "./Clothes.module.css";
 import { Component } from "react";
-import ProductListing from "../ProductListing/ProductListing";
 import axios from "axios";
 import Loading from "../Loading/Loading";
+import ProductItem from "../ProductItem/ProductItem";
 
 export default class Clothes extends Component {
   constructor(props) {
@@ -14,16 +18,17 @@ export default class Clothes extends Component {
     };
   }
 
+  // Fetches the clothes products from the server when the component mounts
   componentDidMount() {
     this.fetchClothesProducts();
   }
 
+  // Fetches the clothes products from the server
   fetchClothesProducts() {
     this.setState({ isLoading: true });
 
     axios
       .post("https://www.yousseftawfik.com/graphql", {
-      // .post("http://localhost:8000/graphql", {
         query: `
         {
           clothesProducts {
@@ -80,16 +85,25 @@ export default class Clothes extends Component {
       );
     }
 
+    if (axiosError) {
+      return (
+        <div className="container">
+          <h2 className="text-4xl mb-5">Clothes Products</h2>
+          <div className="text-red-500">
+            There was an error fetching clothes products: {axiosError.message}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="container ">
         <h2 className="text-4xl mb-5">Clothes Products</h2>
-        {axiosError ? (
-          <div>
-            There was an error fetching the products: {axiosError.message}
-          </div>
-        ) : (
-          <ProductListing products={clothesProducts} />
-        )}
+        <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-2 ">
+          {clothesProducts?.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </div>
       </div>
     );
   }

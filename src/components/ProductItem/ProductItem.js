@@ -1,3 +1,8 @@
+// ProductItem.js
+// This component is responsible for rendering the product card.
+// It displays the product image, name, and price.
+// The quick shop button is displayed only when the user hovers over the product card while the product is in stock.
+
 // import styles from "./ProductItem.module.css";
 import { Component } from "react";
 import QuickShopButton from "../QuickShopButton/QuickShopButton";
@@ -35,10 +40,6 @@ export default class ProductItem extends Component {
               {/* Quick Shop Button */}
               {product.inStock && <QuickShopButton product={product} />}
             </div>
-            {/* Product category */}
-            {/* <h4 className="font-light capitalize text-white rounded-md text-sm bg-green-400 w-fit px-2">
-              {product.category}
-            </h4> */}
             {/* Product title */}
             <h3 className="font-light">{product.name}</h3>
             {/* Product Price */}

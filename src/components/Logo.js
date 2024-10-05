@@ -1,3 +1,6 @@
+// Logo.js
+// This component is responsible for rendering the logo of the store.
+
 import { Component } from "react";
 
 export default class Logo extends Component {

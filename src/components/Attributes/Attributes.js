@@ -1,3 +1,7 @@
+// Attributes.js
+// This component is responsible for rendering product attributes and handling attribute selection.
+// It receives various props to render different types of attributes (PDP & Cart Item).
+
 import styles from "./Attributes.module.css";
 import { Component } from "react";
 

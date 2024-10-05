@@ -1,3 +1,7 @@
+// QuickShopButton.js
+// This component is responsible for rendering the quick shop button.
+// The quick shop button is used to add a product to the cart.
+
 // import styles from "./QuickShopButton.module.css";
 import { TbShoppingCartPlus } from "react-icons/tb";
 import { Component } from "react";

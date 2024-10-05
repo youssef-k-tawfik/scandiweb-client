@@ -1,8 +1,12 @@
+// Tech.js
+// This component is responsible for rendering the tech products.
+// It uses the axios library to fetch the tech products from the server.
+
 // import styles from "./Tech.module.css";
 import { Component } from "react";
-import ProductListing from "../ProductListing/ProductListing";
 import axios from "axios";
 import Loading from "../Loading/Loading";
+import ProductItem from "../ProductItem/ProductItem";
 
 export default class Tech extends Component {
   constructor(props) {
@@ -14,16 +18,17 @@ export default class Tech extends Component {
     };
   }
 
+  // Fetches the tech products from the server when the component mounts
   componentDidMount() {
     this.fetchTechProducts();
   }
 
+  // Fetches the tech products from the server
   fetchTechProducts() {
     this.setState({ isLoading: true });
 
     axios
       .post("https://www.yousseftawfik.com/graphql", {
-      // .post("http://localhost:8000/graphql", {
         query: `
         {
           techProducts {
@@ -82,16 +87,25 @@ export default class Tech extends Component {
       );
     }
 
+    if (axiosError) {
+      return (
+        <div className="container">
+          <h2 className="text-4xl mb-5">Tech Products</h2>
+          <div className="text-red-500">
+            There was an error fetching tech products: {axiosError.message}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="container ">
         <h2 className="text-4xl mb-5">Tech Products</h2>
-        {axiosError ? (
-          <div>
-            There was an error fetching the products: {axiosError.message}
-          </div>
-        ) : (
-          <ProductListing products={techProducts} />
-        )}
+        <div className="grid lg:grid-cols-3 gap-8 md:grid-cols-2 ">
+          {techProducts?.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </div>
       </div>
     );
   }
