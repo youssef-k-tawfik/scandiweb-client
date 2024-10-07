@@ -96,10 +96,14 @@ export default class ProductDetailsPage extends Component {
     console.log("querying product with id:", this.state.id);
 
     axios
-      .post("https://www.yousseftawfik.com/graphql", {
-        query,
-        variables,
-      })
+      .post(
+        "https://www.yousseftawfik.com/graphql",
+        {
+          query,
+          variables,
+        },
+        { signal: this.abortController.signal }
+      )
       .then((response) => {
         this.setState({
           ProductDetails: response.data.data.productById,

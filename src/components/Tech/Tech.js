@@ -29,8 +29,10 @@ export default class Tech extends Component {
     this.setState({ isLoading: true });
 
     axios
-      .post("https://www.yousseftawfik.com/graphql", {
-        query: `
+      .post(
+        "https://www.yousseftawfik.com/graphql",
+        {
+          query: `
         {
           techProducts {
             id
@@ -59,7 +61,9 @@ export default class Tech extends Component {
           }
         }
       `,
-      })
+        },
+        { signal: this.abortController.signal }
+      )
       .then((response) => {
         this.setState({
           techProducts: response?.data?.data?.techProducts,

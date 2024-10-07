@@ -29,8 +29,10 @@ export default class Clothes extends Component {
     this.setState({ isLoading: true });
 
     axios
-      .post("https://www.yousseftawfik.com/graphql", {
-        query: `
+      .post(
+        "https://www.yousseftawfik.com/graphql",
+        {
+          query: `
         {
           clothesProducts {
             id
@@ -59,7 +61,9 @@ export default class Clothes extends Component {
           }
         }
       `,
-      })
+        },
+        { signal: this.abortController.signal }
+      )
       .then((response) => {
         this.setState({ clothesProducts: response.data.data.clothesProducts });
         console.log(this.state.clothesProducts);
