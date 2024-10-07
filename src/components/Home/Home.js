@@ -17,6 +17,7 @@ export default class Home extends Component {
       isLoading: false,
       axiosError: null,
     };
+    this.abortController = new AbortController();
   }
 
   componentDidMount() {
@@ -81,6 +82,10 @@ export default class Home extends Component {
       .finally(() => {
         this.setState({ isLoading: false });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   render() {

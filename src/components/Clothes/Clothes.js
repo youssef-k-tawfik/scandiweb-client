@@ -16,6 +16,7 @@ export default class Clothes extends Component {
       isLoading: false,
       axiosError: null,
     };
+    this.abortController = new AbortController();
   }
 
   // Fetches the clothes products from the server when the component mounts
@@ -71,6 +72,10 @@ export default class Clothes extends Component {
       .finally(() => {
         this.setState({ isLoading: false });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   render() {

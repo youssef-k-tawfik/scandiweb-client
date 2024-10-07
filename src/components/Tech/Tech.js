@@ -16,6 +16,7 @@ export default class Tech extends Component {
       isLoading: false,
       axiosError: null,
     };
+    this.abortController = new AbortController();
   }
 
   // Fetches the tech products from the server when the component mounts
@@ -73,6 +74,10 @@ export default class Tech extends Component {
       .finally(() => {
         this.setState({ isLoading: false });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   render() {

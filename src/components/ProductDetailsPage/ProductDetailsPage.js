@@ -33,6 +33,7 @@ export default class ProductDetailsPage extends Component {
       galleryCount: 0,
       mainImageHeight: 0,
     };
+    this.abortController = new AbortController();
   }
 
   // Fetching the product details from the server once the component is mounted
@@ -117,6 +118,10 @@ export default class ProductDetailsPage extends Component {
       .finally(() => {
         this.setState({ isLoading: false });
       });
+  }
+
+  componentWillUnmount() {
+    this.abortController.abort();
   }
 
   /**
