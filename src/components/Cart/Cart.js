@@ -3,7 +3,7 @@
 // It uses the CartContext to access the cart items and place order functionality.
 
 // import styles from "./Cart.module.css";
-import React, { Component } from "react";
+import { Component } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import CartItem from "../CartItem/CartItem";
 import Loading from "../Loading/Loading";
@@ -16,7 +16,10 @@ export default class Cart extends Component {
     console.log("items from cart:", items);
 
     const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
-    const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
+    const totalPrice = items.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
 
     return (
       <div className=" flex flex-col gap-4">
