@@ -9,7 +9,7 @@
 
 import styles from "./ProductDetailsPage.module.css";
 import axios from "axios";
-import { Component } from "react";
+import React, { Component } from "react";
 import Loading from "../Loading/Loading";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import HTMLReactParser from "html-react-parser/lib/index";
@@ -208,8 +208,9 @@ export default class ProductDetailsPage extends Component {
     if (axiosError) {
       return (
         <>
-          <h2>There was an error fetching the product</h2>
-          <p className="text-red-600">Error Message: {axiosError.message}</p>
+         {/* <h2>There was an error fetching the product</h2>
+          <p className="text-red-600">Error Message: {axiosError.message}</p> */}
+          <h2 className="text-red-600 font-bold">Product not Found!</h2>
         </>
       );
     }
